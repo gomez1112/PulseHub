@@ -1,0 +1,11 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Task 1 -->
+<circle cx="280" cy="540" r="40" fill="#B0B8C4"/>
+<rect x="360" y="510" width="420" height="60" rx="30" fill="#B0B8C4"/>
+<!-- Task 2 -->
+<circle cx="280" cy="680" r="40" fill="#B0B8C4"/>
+<rect x="360" y="650" width="420" height="60" rx="30" fill="#B0B8C4"/>
+<!-- Task 3 -->
+<circle cx="280" cy="820" r="40" fill="#B0B8C4"/>
+<rect x="360" y="790" width="420" height="60" rx="30" fill="#B0B8C4"/>
+</svg>
