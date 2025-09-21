@@ -148,15 +148,17 @@ struct TodayView: View {
         .background(
             LinearGradient(
                 colors: [
-                    Color(.systemBackground),
-                    Color(.secondarySystemBackground).opacity(0.3)
+                    Color.systemBackgroundCompat,
+                    Color.secondarySystemBackgroundCompat.opacity(0.3)
                 ],
                 startPoint: .top,
                 endPoint: .bottom
             )
         )
         .navigationTitle("")
+        #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Command Center")
@@ -1175,3 +1177,4 @@ enum QuickAction: String, CaseIterable {
 #Preview(traits: .previewData) {
     TodayView()
 }
+
