@@ -10,9 +10,6 @@
 		CCE4B4CF2E6DDADF00AFC090 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCE4B4CE2E6DDADF00AFC090 /* WidgetKit.framework */; };
 		CCE4B4D12E6DDADF00AFC090 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCE4B4D02E6DDADF00AFC090 /* SwiftUI.framework */; };
 		CCE4B4E02E6DDAE000AFC090 /* iOSWidgetPulseHubExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CCE4B4CC2E6DDADF00AFC090 /* iOSWidgetPulseHubExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CCE4B4EB2E6DDB0900AFC090 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCE4B4CE2E6DDADF00AFC090 /* WidgetKit.framework */; };
-		CCE4B4EC2E6DDB0900AFC090 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCE4B4D02E6DDADF00AFC090 /* SwiftUI.framework */; };
-		CCE4B4FB2E6DDB0A00AFC090 /* macOSWidgetPulseHubExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CCE4B4EA2E6DDB0900AFC090 /* macOSWidgetPulseHubExtension.appex */; platformFilters = (macos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CCE79D182E80B98C00117DA3 /* PulseHubIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = CCE79D172E80B98C00117DA3 /* PulseHubIcon.icon */; };
 /* End PBXBuildFile section */
 
@@ -38,13 +35,6 @@
 			remoteGlobalIDString = CCE4B4CB2E6DDADF00AFC090;
 			remoteInfo = iOSWidgetPulseHubExtension;
 		};
-		CCE4B4F92E6DDB0A00AFC090 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CC98B7BB2E16E0A100669CB9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CCE4B4E92E6DDB0900AFC090;
-			remoteInfo = macOSWidgetPulseHubExtension;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,7 +44,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				CCE4B4FB2E6DDB0A00AFC090 /* macOSWidgetPulseHubExtension.appex in Embed Foundation Extensions */,
 				CCE4B4E02E6DDAE000AFC090 /* iOSWidgetPulseHubExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -69,7 +58,6 @@
 		CCE4B4CC2E6DDADF00AFC090 /* iOSWidgetPulseHubExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = iOSWidgetPulseHubExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCE4B4CE2E6DDADF00AFC090 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		CCE4B4D02E6DDADF00AFC090 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		CCE4B4EA2E6DDB0900AFC090 /* macOSWidgetPulseHubExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = macOSWidgetPulseHubExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCE4B5002E6DDB6100AFC090 /* iOSWidgetPulseHubExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOSWidgetPulseHubExtension.entitlements; sourceTree = "<group>"; };
 		CCE4B5012E6DDB6600AFC090 /* macOSWidgetPulseHubExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOSWidgetPulseHubExtension.entitlements; sourceTree = "<group>"; };
 		CCE79D172E80B98C00117DA3 /* PulseHubIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = PulseHubIcon.icon; sourceTree = "<group>"; };
@@ -90,13 +78,6 @@
 				Info.plist,
 			);
 			target = CCE4B4CB2E6DDADF00AFC090 /* iOSWidgetPulseHubExtension */;
-		};
-		CCE4B4FF2E6DDB0A00AFC090 /* Exceptions for "macOSWidgetPulseHub" folder in "macOSWidgetPulseHubExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = CCE4B4E92E6DDB0900AFC090 /* macOSWidgetPulseHubExtension */;
 		};
 		CCE4B7342E6E1C9F00AFC090 /* Exceptions for "PulseHub" folder in "iOSWidgetPulseHubExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -168,9 +149,6 @@
 		};
 		CCE4B4ED2E6DDB0900AFC090 /* macOSWidgetPulseHub */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				CCE4B4FF2E6DDB0A00AFC090 /* Exceptions for "macOSWidgetPulseHub" folder in "macOSWidgetPulseHubExtension" target */,
-			);
 			path = macOSWidgetPulseHub;
 			sourceTree = "<group>";
 		};
@@ -207,15 +185,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CCE4B4E72E6DDB0900AFC090 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CCE4B4EC2E6DDB0900AFC090 /* SwiftUI.framework in Frameworks */,
-				CCE4B4EB2E6DDB0900AFC090 /* WidgetKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -242,7 +211,6 @@
 				CC98B7D02E16E0A200669CB9 /* PulseHubTests.xctest */,
 				CC98B7DA2E16E0A200669CB9 /* PulseHubUITests.xctest */,
 				CCE4B4CC2E6DDADF00AFC090 /* iOSWidgetPulseHubExtension.appex */,
-				CCE4B4EA2E6DDB0900AFC090 /* macOSWidgetPulseHubExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -272,7 +240,6 @@
 			);
 			dependencies = (
 				CCE4B4DF2E6DDAE000AFC090 /* PBXTargetDependency */,
-				CCE4B4FA2E6DDB0A00AFC090 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				CC98B7C52E16E0A100669CB9 /* PulseHub */,
@@ -352,28 +319,6 @@
 			productReference = CCE4B4CC2E6DDADF00AFC090 /* iOSWidgetPulseHubExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		CCE4B4E92E6DDB0900AFC090 /* macOSWidgetPulseHubExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CCE4B4FC2E6DDB0A00AFC090 /* Build configuration list for PBXNativeTarget "macOSWidgetPulseHubExtension" */;
-			buildPhases = (
-				CCE4B4E62E6DDB0900AFC090 /* Sources */,
-				CCE4B4E72E6DDB0900AFC090 /* Frameworks */,
-				CCE4B4E82E6DDB0900AFC090 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				CCE4B4ED2E6DDB0900AFC090 /* macOSWidgetPulseHub */,
-			);
-			name = macOSWidgetPulseHubExtension;
-			packageProductDependencies = (
-			);
-			productName = macOSWidgetPulseHubExtension;
-			productReference = CCE4B4EA2E6DDB0900AFC090 /* macOSWidgetPulseHubExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -398,9 +343,6 @@
 					CCE4B4CB2E6DDADF00AFC090 = {
 						CreatedOnToolsVersion = 26.0;
 					};
-					CCE4B4E92E6DDB0900AFC090 = {
-						CreatedOnToolsVersion = 26.0;
-					};
 				};
 			};
 			buildConfigurationList = CC98B7BE2E16E0A100669CB9 /* Build configuration list for PBXProject "PulseHub" */;
@@ -421,7 +363,6 @@
 				CC98B7CF2E16E0A200669CB9 /* PulseHubTests */,
 				CC98B7D92E16E0A200669CB9 /* PulseHubUITests */,
 				CCE4B4CB2E6DDADF00AFC090 /* iOSWidgetPulseHubExtension */,
-				CCE4B4E92E6DDB0900AFC090 /* macOSWidgetPulseHubExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -450,13 +391,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CCE4B4CA2E6DDADF00AFC090 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CCE4B4E82E6DDB0900AFC090 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -494,13 +428,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CCE4B4E62E6DDB0900AFC090 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -519,14 +446,6 @@
 			platformFilter = ios;
 			target = CCE4B4CB2E6DDADF00AFC090 /* iOSWidgetPulseHubExtension */;
 			targetProxy = CCE4B4DE2E6DDAE000AFC090 /* PBXContainerItemProxy */;
-		};
-		CCE4B4FA2E6DDB0A00AFC090 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilters = (
-				macos,
-			);
-			target = CCE4B4E92E6DDB0900AFC090 /* macOSWidgetPulseHubExtension */;
-			targetProxy = CCE4B4F92E6DDB0A00AFC090 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -663,7 +582,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PulseHub/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Cadence;
+				INFOPLIST_KEY_CFBundleDisplayName = DecisionFlow;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -713,7 +632,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PulseHub/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Cadence;
+				INFOPLIST_KEY_CFBundleDisplayName = DecisionFlow;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -870,6 +789,10 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -903,82 +826,16 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		CCE4B4FD2E6DDB0A00AFC090 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = macOSWidgetPulseHubExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 88QL9VPLMY;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = macOSWidgetPulseHub/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = macOSWidgetPulseHub;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.PulseHub.macOSWidgetPulseHub;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		CCE4B4FE2E6DDB0A00AFC090 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = macOSWidgetPulseHubExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 88QL9VPLMY;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = macOSWidgetPulseHub/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = macOSWidgetPulseHub;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.PulseHub.macOSWidgetPulseHub;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1026,15 +883,6 @@
 			buildConfigurations = (
 				CCE4B4E22E6DDAE000AFC090 /* Debug */,
 				CCE4B4E32E6DDAE000AFC090 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CCE4B4FC2E6DDB0A00AFC090 /* Build configuration list for PBXNativeTarget "macOSWidgetPulseHubExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CCE4B4FD2E6DDB0A00AFC090 /* Debug */,
-				CCE4B4FE2E6DDB0A00AFC090 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

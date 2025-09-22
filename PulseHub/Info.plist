@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBndleDisplayName</key>
-	<string>Cadence</string>
+	<string>DecisionFlow</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
