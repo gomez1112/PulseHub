@@ -24,22 +24,6 @@ struct DecisionView: View {
     var body: some View {
             ScrollView {
                 VStack(spacing: 20) {
-                    Button {
-                        try? context.delete(model: Decision.self)
-                    } label: {
-                        Text("Delete Decision")
-                    }
-                    Button {
-                        try? context.delete(model: Meeting.self)
-                    } label: {
-                        Text("Delete Meeting")
-                    }
-                    Button {
-                        try? context.delete(model: ComplianceItem.self)
-                    } label: {
-                        Text("Delete Compliance")
-                    }
-                    
                     // Analytics Toggle
                     if model.showAnalytics {
                         analyticsView
