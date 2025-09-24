@@ -8,7 +8,7 @@
 import Foundation
 
 enum SearchResultItem {
-    case compliance(ComplianceItem)
+    case task(ProjectTask)
     case meeting(Meeting)
     case decision(Decision)
     case observation(ClassroomWalkthrough)

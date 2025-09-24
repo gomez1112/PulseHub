@@ -53,7 +53,7 @@ final class Meeting: Identifiable {
     var notes: String? = nil
     
     var duration: Measurement<UnitDuration> {
-        Measurement(value: endTime.timeIntervalSince(startTime), unit: .hours) 
+        Measurement(value: endTime.timeIntervalSince(startTime), unit: .seconds)
     }
     var formatterDuration: String {
         let formatter = DateComponentsFormatter()
@@ -68,9 +68,6 @@ final class Meeting: Identifiable {
     @Relationship(inverse: \Decision.meeting)
     var decisions: [Decision]?
     
-    @Relationship(inverse: \ComplianceItem.meeting)
-    var complianceItems: [ComplianceItem]?
-    
     @Relationship(inverse: \ClassroomWalkthrough.meeting)
     var observations: [ClassroomWalkthrough]?
     
@@ -81,7 +78,6 @@ final class Meeting: Identifiable {
         type: MeetingType,
         notes: String? = nil,
         decisions: [Decision] = [],
-        complianceItems: [ComplianceItem] = [],
         observations: [ClassroomWalkthrough] = []
     ) {
         self.title = title
@@ -90,7 +86,6 @@ final class Meeting: Identifiable {
         self.type = type
         self.notes = notes
         self.decisions = decisions
-        self.complianceItems = complianceItems
         self.observations = observations
     }
 }
@@ -119,16 +114,6 @@ enum MeetingStatus: String, Identifiable, CaseIterable, Codable {
             case .completed: return .green
             case .cancelled: return .red
             case .rescheduled: return .yellow
-        }
-    }
-
-    var statusToComplianceStatus: ComplianceStatus {
-        switch self {
-            case .scheduled: return .pending
-            case .inProgress: return .inProgress
-            case .completed: return .completed
-            case .cancelled: return .cancelled
-            case .rescheduled: return .pending
         }
     }
 }
@@ -165,7 +150,6 @@ extension Meeting {
             type: .admin,
             notes: "Discuss upcoming school year goals.",
             decisions: [Decision(title: "Fail everyone"), Decision(title: "Pass everyone")],
-            complianceItems: [],
             observations: []
         ),
         Meeting(
@@ -174,7 +158,6 @@ extension Meeting {
             attendees: ["Carol Lee", "David Brown", "Eva Green"],
             type: .staff,
             decisions: [],
-            complianceItems: [],
             observations: []
         )
     ]

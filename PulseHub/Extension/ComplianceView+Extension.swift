@@ -20,51 +20,15 @@ extension DataModel {
     /// The new item will be assigned to the currently selected category, or to a default "General" category if none is selected.
     /// After setting its properties, the item is saved using the model's `save(_:)` method.
     func saveItem(title: String, detail: String, dueDate: Date, priority: Priority) {
-        let item = ComplianceItem(
+        let item = ProjectTask(
             title: title.trimmingCharacters(in: .whitespacesAndNewlines),
-            category: selectedCategory,  // This can be nil, which is fine
-            detail: detail.isEmpty ? nil : detail,
             dueDate: dueDate
         )
         item.priority = priority
         
-        // If there's a category, add the item to it
-        if let category = selectedCategory {
-            if category.items == nil {
-                category.items = []
-            }
-            category.items?.append(item)
-        }
-        
         save(item)
     }
     
-    /// Creates a new compliance category using the value of `newCategoryName`, saves it, and sets it as the currently selected category.
-    ///
-    /// - Side Effects:
-    ///   - Persists the new `ComplianceCategory` by calling `save(_:)`.
-    ///   - Updates the `selectedCategory` to the newly created category.
-    ///   - Resets `newCategoryName` to an empty string.
-    ///   - Sets `isCreatingNewCategory` to `false` to indicate the creation process is complete.
-    func createCategory(existingCategories: [ComplianceCategory]) {
-        let trimmedName = newCategoryName.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        // Check if category already exists (case insensitive)
-        if let existingCategory = existingCategories.first(where: {
-            $0.title.lowercased() == trimmedName.lowercased()
-        }) {
-            // Use existing category
-            selectedCategory = existingCategory
-        } else {
-            // Create new category
-            let category = ComplianceCategory(title: trimmedName)
-            save(category)
-            selectedCategory = category
-        }
-        
-        newCategoryName = ""
-        isCreatingNewCategory = false
-    }
     
     /// Calculates and returns the count of compliance items in each status category.
     ///
@@ -74,7 +38,7 @@ extension DataModel {
     ///   - `inProgress`: The number of items with a status of `.inProgress`.
     ///   - `completed`: The number of items with a status of `.completed`.
     ///   - `overdue`: The number of items that are overdue, determined by `isOverdue`.
-    func stats(items: [ComplianceItem]) -> (pending: Int, inProgress: Int, completed: Int, overdue: Int) {
+    func stats(items: [ProjectTask]) -> (pending: Int, inProgress: Int, completed: Int, overdue: Int) {
         let pending = items.filter { $0.status == .pending }.count
         let inProgress = items.filter { $0.status == .inProgress }.count
         let completed = items.filter { $0.status == .completed }.count
@@ -91,7 +55,7 @@ extension DataModel {
     ///   - If `filterPriority` is set, only items matching the selected priority are included.
     ///
     /// The function applies the filters in the following order: search text, status, then priority.
-    func filtered(items: [ComplianceItem]) -> [ComplianceItem] {
+    func filtered(items: [ProjectTask]) -> [ProjectTask] {
         var result = items
         
         if !searchText.isEmpty {
@@ -127,13 +91,16 @@ extension DataModel {
     /// Only non-empty groups are included in the returned array, and the groups are ordered as:
     /// "Overdue", "This Week", "This Month", "Later".
     /// This method filters items using `filtered(items:)` before grouping.
-    func groupedItems(items: [ComplianceItem]) -> [(String, [ComplianceItem])] {
-        let grouped = Dictionary(grouping: filtered(items: items)) { item in
-            if item.isOverdue {
+    func groupedItems(items: [ProjectTask]) -> [(String, [ProjectTask])] {
+        let grouped = Dictionary(grouping: filtered(items: items)) { task in
+            let isOverdue = task.status != .completed && task.dueDate < Date()
+            let daysToDue = Calendar.current.dateComponents([.day], from: Date(), to: task.dueDate).day ?? 0
+            
+            if isOverdue {
                 return "Overdue"
-            } else if item.daysToDue <= 7 {
+            } else if daysToDue <= 7 {
                 return "This Week"
-            } else if item.daysToDue <= 30 {
+            } else if daysToDue <= 30 {
                 return "This Month"
             } else {
                 return "Later"
@@ -142,8 +109,8 @@ extension DataModel {
         
         let order = ["Overdue", "This Week", "This Month", "Later"]
         return order.compactMap { key in
-            guard let items = grouped[key] else { return nil }
-            return (key, items.sorted { $0.dueDate < $1.dueDate })
+            guard let tasks = grouped[key] else { return nil }
+            return (key, tasks.sorted { $0.dueDate < $1.dueDate })
         }
     }
 }

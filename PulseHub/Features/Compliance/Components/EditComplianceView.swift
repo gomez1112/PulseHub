@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditComplianceView: View {
-    @Bindable var item: ComplianceItem
+    @Bindable var item: ProjectTask
     @Environment(\.dismiss) private var dismiss
     
     @State private var title: String = ""
@@ -33,7 +33,6 @@ struct EditComplianceView: View {
                 TextEditor(text: $detail)
                     .frame(minHeight: 80)
                     .padding(8)
-                DatePicker("Due Date", selection: $dueDate, in: Date()..., displayedComponents: .date)
                 
                 Section("Settings") {
                     DatePicker("Due Date", selection: $dueDate, displayedComponents: .date)
@@ -87,8 +86,8 @@ struct EditComplianceView: View {
 }
 
 
-#Preview {
+#Preview(traits: .previewData) {
     NavigationStack {
-        EditComplianceView(item: ComplianceItem(title: "Sample Compliance", category: ComplianceCategory.samples[0], dueDate: Date()))
+        EditComplianceView(item: ProjectTask(title: "Sample Compliance", dueDate: Date()))
     }
 }

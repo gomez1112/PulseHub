@@ -9,16 +9,25 @@ import SwiftData
 import SwiftUI
 
 struct EditDecisionView: View {
-    let decision: Decision
+    
+    var decision: Decision?
+    
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     
     @State private var title: String = ""
     @State private var detail: String = ""
     @State private var rationale: String = ""
     @State private var impact: ImpactLevel = .medium
     @State private var nextSteps: String = ""
-    @State private var wasEffective: Bool?
-    @State private var reflection: String = ""
+
+    private var navigationTitle: String {
+        decision == nil ? "New Decision" : "Edit Decision"
+    }
+    private var isFormValid: Bool {
+        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !rationale.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
     
     var body: some View {
         NavigationStack {
@@ -43,68 +52,51 @@ struct EditDecisionView: View {
                 Section("Follow Up") {
                     TextField("Next Steps", text: $nextSteps, axis: .vertical)
                         .lineLimit(2...4)
-                    
-                    Toggle("Effectiveness Reviewed", isOn: .constant(wasEffective != nil))
-                        .disabled(true)
-                    
-                    if wasEffective != nil {
-                        HStack {
-                            Text("Rating")
-                            Spacer()
-                            if let effective = wasEffective {
-                                Label(
-                                    effective ? "Effective" : "Ineffective",
-                                    systemImage: effective ? "hand.thumbsup" : "hand.thumbsdown"
-                                )
-                                .foregroundStyle(effective ? .green : .orange)
-                            }
-                        }
-                    }
                 }
-                
-                if !reflection.isEmpty {
-                    Section("Reflection") {
-                        TextEditor(text: $reflection)
-                            .frame(minHeight: 100)
+                .navigationTitle(navigationTitle)
+#if !os(macOS)
+                .navigationBarTitleDisplayMode(.inline)
+#endif
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(role: .cancel, action: dismiss.callAsFunction)
+                    }
+                    
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(role: .confirm, action: save)
+                            .disabled(!isFormValid)
                     }
                 }
             }
-            .navigationTitle("Edit Decision")
-            #if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(role: .cancel, action: dismiss.callAsFunction)
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(role: .confirm, action: saveChanges)
-                    .disabled(title.isEmpty || rationale.isEmpty)
-                }
-            }
+            .onAppear(perform: setup)
         }
-        .onAppear {
+    }
+    private func setup() {
+        if let decision {
+            // Editing an existing decision, so populate the form.
             title = decision.title
             detail = decision.detail ?? ""
             rationale = decision.rationale
             impact = decision.impact
             nextSteps = decision.nextSteps ?? ""
-            wasEffective = decision.wasEffective
-            reflection = decision.reflection ?? ""
         }
     }
-    
-    private func saveChanges() {
-        decision.title = title
-        decision.detail = detail.isEmpty ? nil : detail
-        decision.rationale = rationale
-        decision.impact = impact
-        decision.nextSteps = nextSteps.isEmpty ? nil : nextSteps
-        decision.reflection = reflection.isEmpty ? nil : reflection
-#if !os(macOS)
-        AppTheme.impact(.light)
-        #endif
+    private func save() {
+        if let decision {
+            // Update existing decision
+            decision.title = title
+            decision.detail = detail.isEmpty ? nil : detail
+            decision.rationale = rationale
+            decision.impact = impact
+            decision.nextSteps = nextSteps.isEmpty ? nil : nextSteps
+        } else {
+            // Create and insert a new decision
+            let newDecision = Decision(title: title, detail: detail.isEmpty ? nil : detail)
+            newDecision.rationale = rationale
+            newDecision.impact = impact
+            newDecision.nextSteps = nextSteps.isEmpty ? nil : nextSteps
+            modelContext.insert(newDecision)
+        }
         dismiss()
     }
 }

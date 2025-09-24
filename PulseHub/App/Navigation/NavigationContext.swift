@@ -71,24 +71,24 @@ final class NavigationContext {
 enum NavigationDestination: Identifiable, Hashable {
     case meeting(Meeting)
     case decision(Decision)
-    case compliance(ComplianceItem)
+    case task(ProjectTask)
     case observation(ClassroomWalkthrough)
     // Add more cases as needed
     
     var id: String {
         switch self {
-            case .meeting(let m): return "meeting-\(m.title)"
+            case .meeting(let m): return "meeting-\(m.id.uuidString)"
             case .decision(let d): return "decision-\(d.title)"
-            case .compliance(let c): return "compliance-\(c.title)"
-            case .observation(let o): return "observation-\(o.teacherName)"
+            case .task(let t): return "task-\(t.id.uuidString)"
+            case .observation(let o): return "observation-\(o.id.uuidString)"
         }
     }
 }
 // Enum for all sheets in the app
 enum SheetDestination: Identifiable {
     
-    case addCompliance
-    case editCompliance(ComplianceItem)
+    case addTask
+    case editTask(ProjectTask)
     case addMeeting
     case editMeeting(Meeting)
     case addDecision
@@ -100,8 +100,8 @@ enum SheetDestination: Identifiable {
     
     var id: String {
         switch self {
-            case .addCompliance: return "addCompliance"
-            case .editCompliance(let item): return "editCompliance_\(item.id)"
+            case .addTask: return "addTask"
+            case .editTask(let item): return "editTask\(item.id)"
             case .addMeeting: return "addMeeting"
             case .editMeeting(let meeting): return "editMeeting_\(meeting.id)"
             case .addDecision: return "addDecision"

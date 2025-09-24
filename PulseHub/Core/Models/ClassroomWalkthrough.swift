@@ -38,16 +38,21 @@ import SwiftData
 /// - Sample Data:
 ///   - Provided extensions give sample walkthroughs and components for preview or demonstration purposes.
 @Model
-final class ClassroomWalkthrough {
+final class ClassroomWalkthrough: Identifiable {
+    var id = UUID()
     var teacherName = ""
     var date = Date()
     var subject = ""
     var gradeLevel = GradeLevel.ninth
     var observationType = ObservationType.followUp
     var duration = 0
-    var overallRating = DanielsonScore.developing
     var followUpRequired = false
     var followUpDate: Date?
+    
+    /// The scored rubric components
+    @Relationship(deleteRule: .cascade, inverse: \RubricComponent.observation)
+    var components: [RubricComponent]? = []
+    var meeting: Meeting?
     
     /// The average numeric value of all rubric component scores in this walkthrough.
     ///
@@ -56,13 +61,23 @@ final class ClassroomWalkthrough {
     /// components associated with this walkthrough, the average will be 0.
     ///
     /// - Returns: A `Double` representing the average numeric rubric score, or 0 if no components exist.
+
     @MainActor
     var overallAverage: Double {
         guard let components, !components.isEmpty else { return 0 }
         let total = components.map { Double($0.score.numericValue) }.reduce(0, +)
         return total / Double(components.count)
     }
-    
+    @MainActor
+    var overallRating: DanielsonScore {
+        switch overallAverage {
+            case 1..<2: .ineffective
+            case 2..<3: .developing
+            case 3..<4: .effective
+            case 4...: .highlyEffective // Use 4... to include 4.0
+            default: .ineffective
+        }
+    }
     /// A human-readable description of the overall Danielson rating for this observation.
     ///
     /// This computed property interprets the `overallAverage` rubric score and maps it
@@ -76,19 +91,9 @@ final class ClassroomWalkthrough {
     /// - Returns: A `String` summary of the overall Danielson rating.
     @MainActor
     var overallRatingDescription: String {
-        switch overallAverage {
-            case 1..<2: "Ineffective"
-            case 2..<3: "Developing"
-            case 3..<4: "Effective"
-            case 4..<5: "Highly Effective"
-            default: "Ineffective"
-        }
+        // This can now just use the computed property above.
+        return overallRating.rawValue
     }
-    /// The scored rubric components
-    @Relationship(deleteRule: .cascade, inverse: \RubricComponent.observation)
-    var components: [RubricComponent]? = []
-
-    var meeting: Meeting?
 
     init(
         teacherName: String,

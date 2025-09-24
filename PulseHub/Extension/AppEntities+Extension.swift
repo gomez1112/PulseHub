@@ -21,17 +21,6 @@ extension DataModel {
         let descriptor = FetchDescriptor<M>(predicate: predicate)
         return try context.fetchCount(descriptor)
     }
-    func complianceItemEntities(matching predicate: Predicate<ComplianceItem> = #Predicate { _ in true }, sortBy: [SortDescriptor<ComplianceItem>] = [SortDescriptor(\.dueDate, order: .reverse)], limit: Int? = nil) throws -> [ComplianceItemEntity] {
-        try fetchEntities(of: ComplianceItem.self,predicate: predicate,sortBy: sortBy,limit: limit, map: ComplianceItemEntity.init)
-    }
-    
-    func complianceItemCount(matching predicate: Predicate<ComplianceItem> = #Predicate { _ in true }) throws -> Int {
-        try count(ComplianceItem.self, predicate: predicate)
-    }
-    
-    func suggest5ComplianceItemEntities() throws -> [ComplianceItemEntity] {
-        try complianceItemEntities(limit: 5)
-    }
     
     // MARK: - Decision
     

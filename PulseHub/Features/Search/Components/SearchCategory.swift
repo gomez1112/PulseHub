@@ -9,7 +9,7 @@ import Foundation
 
 enum SearchCategory: String, CaseIterable, Identifiable {
     case all = "All"
-    case compliance = "Compliance"
+    case task = "Tasks"
     case meetings = "Meetings"
     case decisions = "Decisions"
     case observations = "Observations"
@@ -17,7 +17,7 @@ enum SearchCategory: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
             case .all: "square.grid.2x2"
-            case .compliance: "checkmark.shield"
+            case .task: "checkmark.shield"
             case .meetings: "calendar"
             case .decisions: "lightbulb"
             case .observations: "eye"

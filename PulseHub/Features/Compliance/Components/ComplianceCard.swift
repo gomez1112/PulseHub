@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ComplianceCard: View {
-    let item: ComplianceItem
+    let task: ProjectTask
+    
     let action: () -> ()
     
     var body: some View {
@@ -16,30 +17,27 @@ struct ComplianceCard: View {
             VStack(alignment: .leading) {
                 HStack {
                     VStack(alignment: .leading) {
-                        Text(item.title)
+                        Text(task.title)
                             .font(.callout.weight(.semibold))
                             .foregroundStyle(.primary)
-                        Text(item.category?.title ?? "No Category")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Image(systemName: item.priority.icon)
+                    Image(systemName: task.priority.icon)
                         .font(.caption.weight(.medium))
-                        .foregroundStyle(item.priority.color)
+                        .foregroundStyle(task.priority.color)
                         .padding()
-                        .background { Circle().fill(item.priority.color.opacity(0.15))}
+                        .background { Circle().fill(task.priority.color.opacity(0.15))}
                 }
                 HStack {
                     Label {
-                        Text(LocalizedStringResource(stringLiteral: item.dueText))
+                        Text(LocalizedStringResource(stringLiteral: task.dueText))
                     } icon: {
                         Image(systemName: "calendar")
                     }
                     .font(.caption)
-                    .foregroundStyle(item.isOverdue ? .red : .secondary)
+                    .foregroundStyle(task.isOverdue ? .red : .secondary)
                     Spacer()
-                    StatusBadge(status: item.status)
+                    StatusBadge(status: task.status)
                 }
             }
             .padding()
@@ -54,5 +52,5 @@ struct ComplianceCard: View {
 }
 
 #Preview {
-    ComplianceCard(item: ComplianceItem.samples[0], action: {})
+    ComplianceCard(task: ProjectTask(title: "New Task"), action: {})
 }

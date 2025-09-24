@@ -37,6 +37,7 @@ enum Tabs: String, Identifiable, Hashable, CaseIterable, Codable {
     case compliance
     case meetings
     case decision
+    case observations
     case search
     var id: Self { self }
     
@@ -46,6 +47,7 @@ enum Tabs: String, Identifiable, Hashable, CaseIterable, Codable {
             case .compliance: "Compliance"
             case .meetings: "Meetings"
             case .decision: "Decision"
+            case .observations: "Observations"
             case .search: "Search"
         }
     }
@@ -56,6 +58,7 @@ enum Tabs: String, Identifiable, Hashable, CaseIterable, Codable {
             case .compliance: "checkmark.shield"
             case .meetings: "calendar"
             case .decision: "lightbulb"
+            case .observations: "eye"
             case .search: "magnifyingglass"
         }
     }
@@ -82,6 +85,7 @@ enum Tabs: String, Identifiable, Hashable, CaseIterable, Codable {
             case .compliance: ComplianceView()
             case .meetings: MeetingView()
             case .decision: DecisionView()
+            case .observations: ObservationView()
             case .search: SearchView()
         }
     }

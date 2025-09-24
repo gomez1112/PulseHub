@@ -18,20 +18,8 @@ struct AddComplianceView: View {
     @State private var dueDate = Date()
     @State private var priority = Priority.medium
     
-    
-    @Query private var categories: [ComplianceCategory]
     @FocusState private var titleFieldFocused: Bool
-    
-    // Helper to get unique categories
-    private var uniqueCategories: [ComplianceCategory] {
-        // Remove duplicates based on title
-        var seen = Set<String>()
-        return categories.filter { category in
-            guard !seen.contains(category.title) else { return false }
-            seen.insert(category.title)
-            return true
-        }
-    }
+
     
     var body: some View {
         @Bindable var model = model
@@ -68,41 +56,6 @@ struct AddComplianceView: View {
                 } header: {
                     Label("Priority", systemImage: "exclamationmark.triangle.fill")
                 }
-                
-                
-                Section("Category") {
-                    
-                    Toggle("Create New Category", isOn: $model.isCreatingNewCategory.animation())
-                    
-                    if model.isCreatingNewCategory {
-                        HStack {
-                            TextField("Category Name", text: $model.newCategoryName)
-                            Button("Add", action: createCategory) 
-                                .disabled(model.newCategoryName.isEmpty)
-                        }
-                        if categoryExists(model.newCategoryName) && model.newCategoryName.isEmpty {
-                            Text("Category already exisits")
-                                .font(.caption)
-                                .foregroundStyle(.red)
-                        }
-                    }
-                    
-                    HStack(spacing: 8) {
-                        CategoryChip(title: "None", isSelected: model.selectedCategory == nil) {
-                            model.selectedCategory = nil
-                        }
-                        ForEach(uniqueCategories) { category in
-                            CategoryChip(title: category.title, isSelected: model.selectedCategory == category) {
-                                model.selectedCategory = category
-                            }
-                            .contextMenu {
-                                Button(role: .destructive) {
-                                    model.delete(category)
-                                }
-                            }
-                        }
-                    }
-                }
             }
             .formStyle(.grouped)
             .navigationTitle($title)
@@ -120,11 +73,8 @@ struct AddComplianceView: View {
         }
         .onAppear {
             titleFieldFocused = true
-            model.selectedCategory = nil
+
         }
-    }
-    private func categoryExists(_ name: String) -> Bool {
-        categories.contains { $0.title.lowercased() == name.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) }
     }
     private func save() {
         model.saveItem(title: title, detail: detail, dueDate: dueDate, priority: priority)
@@ -132,12 +82,6 @@ struct AddComplianceView: View {
         AppTheme.impact(.medium)
         #endif
         dismiss()
-    }
-    private func createCategory() {
-        model.createCategory(existingCategories: categories)
-#if !os(macOS)
-        AppTheme.impact(.light)
-        #endif
     }
 }
 

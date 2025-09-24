@@ -184,7 +184,6 @@ struct EditObservationView: View {
         observation.gradeLevel = gradeLevel
         observation.observationType = observationType
         observation.duration = duration
-        observation.overallRating = overallRating
         observation.followUpRequired = followUpRequired
         observation.followUpDate = followUpRequired ? followUpDate : nil
         observation.components = components

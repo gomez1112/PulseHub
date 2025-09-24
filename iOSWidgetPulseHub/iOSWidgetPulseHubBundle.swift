@@ -11,7 +11,6 @@ import SwiftUI
 @main
 struct iOSWidgetPulseHubBundle: WidgetBundle {
     var body: some Widget {
-        ComplianceWidget()
         ScheduleWidget()
         DecisionWidget()
 

@@ -48,8 +48,8 @@ struct ContentView: View {
                 MeetingDetailView(meeting: meeting)
             case .decision(let decision):
                 DecisionDetailView(decision: decision)
-            case .compliance(let item):
-                ComplianceDetailView(item: item)
+            case .task(let task):
+                ComplianceDetailView(task: task)
             case .observation(let observation):
                 ObservationDetailView(observation: observation)
         }
@@ -74,16 +74,16 @@ struct SheetPresentationModifier: ViewModifier {
     @ViewBuilder
     private func sheetContent(for sheet: SheetDestination) -> some View {
         switch sheet {
-            case .addCompliance:
+            case .addTask:
                 AddComplianceView()
-            case .editCompliance(let item):
+            case .editTask(let item):
                 EditComplianceView(item: item)
             case .addMeeting:
                 AddMeetingView()
             case .editMeeting(let meeting):
                 EditMeetingView(meeting: meeting)
             case .addDecision:
-                AddDecisionView()
+                EditDecisionView(decision: nil)
             case .editDecision(let decision):
                 EditDecisionView(decision: decision)
             case .addObservation:

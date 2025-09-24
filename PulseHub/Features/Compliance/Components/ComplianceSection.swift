@@ -10,9 +10,9 @@ import SwiftUI
 struct ComplianceSection: View {
     @Environment(DataModel.self) private var model
     let title: String
-    let items: [ComplianceItem]
+    let items: [ProjectTask]
     let animation: Namespace.ID
-    let onItemTap: (ComplianceItem) -> ()
+    let onItemTap: (ProjectTask) -> ()
     
     @State private var isExpanded = true
     
@@ -21,7 +21,7 @@ struct ComplianceSection: View {
             Button {
                 withAnimation(.spring(response: 0.3)) {
                     isExpanded.toggle()
-#if !os(macOS)
+                    #if !os(macOS)
                     AppTheme.selection()
                     #endif
                 }
@@ -52,17 +52,17 @@ struct ComplianceSection: View {
             .buttonStyle(.plain)
             if isExpanded {
                 VStack {
-                    ForEach(items) { item in
-                        ComplianceCard(item: item) {
-                            onItemTap(item)
+                    ForEach(items) { task in
+                        ComplianceCard(task: task) {
+                            onItemTap(task)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
-                                model.delete(item)
+                                model.delete(task)
                             }
                         }
                         .transition(.asymmetric(insertion: .push(from: .trailing), removal: .push(from: .leading)))
-                        .matchedGeometryEffect(id: item.id, in: animation)
+                        .matchedGeometryEffect(id: task.id, in: animation)
                     }
                 }
                 .padding(.horizontal)
@@ -84,7 +84,7 @@ struct ComplianceSection: View {
     @Previewable @Namespace var animation
     ComplianceSection(
         title: "Overdue",
-        items: Array(repeating: ComplianceItem.samples[0], count: 5),
+        items: Array(repeating: ProjectTask(title: "New Task"), count: 5),
         animation: animation,
         onItemTap: { _ in }
     )

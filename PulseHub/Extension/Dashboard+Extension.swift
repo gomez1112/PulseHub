@@ -35,8 +35,8 @@ extension DataModel {
     ///   - `daysToDue` is greater than or equal to 0
     ///
     /// The result is limited to the first 5 items that meet these criteria.
-    func upcomingItems(_ items: [ComplianceItem]) -> [ComplianceItem] {
-        items.filter { !$0.isResolved && $0.daysToDue >= 0 }.prefix(5).map { $0 }
+    func upcomingItems(_ items: [ProjectTask]) -> [ProjectTask] {
+        items.filter { !$0.isCompleted && $0.daysToDue >= 0 }.prefix(5).map { $0 }
     }
     
     /// Returns the number of overdue compliance items in the provided array.
@@ -45,7 +45,7 @@ extension DataModel {
     /// - Returns: The count of items whose `isOverdue` property is `true`.
     ///
     /// An item is considered overdue if its `isOverdue` property evaluates to `true`.
-    func overdueCount(_ items: [ComplianceItem]) -> Int {
+    func overdueCount(_ items: [ProjectTask]) -> Int {
         items.filter { $0.isOverdue }.count
     }
     
@@ -56,7 +56,7 @@ extension DataModel {
     ///
     /// The completion rate is determined by dividing the number of items whose `status` is `.completed` by the total number of items.
     /// If there are no items in the input array, the function returns 0.
-    func completionRate(_ items: [ComplianceItem]) -> Double {
+    func completionRate(_ items: [ProjectTask]) -> Double {
         let total = items.count
         guard total > 0 else { return 0 }
         let completed = items.filter { $0.status == .completed }.count
@@ -207,7 +207,7 @@ extension DataModel {
     /// The current time period is determined by the `selectedTimeRange` property, which can be `.today`, `.week`, `.month`, or `.year`.
     /// The net change is calculated as the difference between the number of new items created and the number of items completed.
     /// A positive net change indicates a growth in outstanding compliance tasks; a negative net change indicates progress in completion.
-    func complianceTrend(_ items: [ComplianceItem]) -> Trend {
+    func complianceTrend(_ items: [ProjectTask]) -> Trend {
         // For compliance, we look at completion rate improvement
         //let activeItems = items.filter { !$0.isResolved }
         let completedThisPeriod = items.filter { item in
@@ -264,11 +264,11 @@ extension DataModel {
     /// The function compares the current count of overdue compliance items (via `overdueCount(_:)`)
     /// with the count of items that were overdue as of the previous day (unresolved items whose `dueDate` was before yesterday).
     /// A positive difference indicates an increase in overdue items, a negative difference indicates a decrease, and zero indicates no change.
-    func overdueTrend(_ items: [ComplianceItem]) -> Trend {
+    func overdueTrend(_ items: [ProjectTask]) -> Trend {
         // For overdue, we compare with last period
         let previousOverdueCount = items.filter { item in
             let wasOverdue = item.dueDate < Date().addingTimeInterval(-86400) // Yesterday
-            return wasOverdue && !item.isResolved
+            return wasOverdue && !item.isCompleted
         }.count
         
         let difference = overdueCount(items) - previousOverdueCount

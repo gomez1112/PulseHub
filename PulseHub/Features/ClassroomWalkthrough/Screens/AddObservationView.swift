@@ -25,10 +25,13 @@ struct AddObservationView: View {
     @State private var components: [RubricComponent] = []
 
     @State private var isShowingEditComponent = false
+    @State private var componentToEdit: RubricComponent?
     
     @Query private var meetings: [Meeting]
     
     @FocusState private var teacherNameFieldFocused: Bool
+    
+    
     
     var body: some View {
         @Bindable var model = model
@@ -135,15 +138,17 @@ struct AddObservationView: View {
                     } else {
                         ForEach(components.enumerated(), id: \.offset) { index, component in
                             ComponentRow(component: component) {
-                                editComponent(at: index)
+                                componentToEdit = component
                             } onDelete: {
                                 withAnimation {
                                     removeComponent(at: index)
                                 }
                             }
-                            .sheet(isPresented: $isShowingEditComponent) {
-                                EditComponentView(component: component) { component in
-                                    model.save(component)
+                            .sheet(item: $componentToEdit) { component in
+                                EditComponentView(component: component) { updatedComponent in
+                                    if let index = components.firstIndex(where: { $0.id == updatedComponent.id }) {
+                                        components[index] = updatedComponent
+                                    }
                                 }
                             }
                         }
@@ -194,7 +199,6 @@ struct AddObservationView: View {
             AddComponentView { component in
                 withAnimation {
                     components.append(component)
-                    model.save(component)
                 }
             }
         }

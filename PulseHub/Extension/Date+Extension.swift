@@ -16,8 +16,12 @@ extension Date {
         Calendar.current.isDateInTomorrow(self)
     }
     var isThisWeek: Bool {
-        Calendar.current.isDate(self, equalTo: Date(), toGranularity: .weekOfYear)
+        guard let weekInterval = Calendar.current.dateInterval(of: .weekOfYear, for: .now) else {
+            return false
+        }
+        return weekInterval.contains(self)
     }
+    
     var isValidDate: Bool {
         self != Date.distantPast
     }

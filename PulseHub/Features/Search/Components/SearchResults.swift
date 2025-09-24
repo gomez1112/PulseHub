@@ -8,7 +8,7 @@
 import Foundation
 
 struct SearchResults {
-    var items: [ComplianceItem] = []
+    var items: [ProjectTask] = []
     var meetings: [Meeting] = []
     var decisions: [Decision] = []
     var observations: [ClassroomWalkthrough] = []

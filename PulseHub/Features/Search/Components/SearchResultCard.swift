@@ -79,7 +79,7 @@ struct SearchResultCard: View {
     
     private var icon: String {
         switch item {
-            case .compliance: return "checkmark.shield.fill"
+            case .task: return "checkmark.shield.fill"
             case .meeting: return "calendar.circle.fill"
             case .decision: return "lightbulb.fill"
             case .observation: return "eye.fill"
@@ -88,7 +88,7 @@ struct SearchResultCard: View {
     
     private var iconColor: Color {
         switch item {
-            case .compliance: return .blue
+            case .task: return .blue
             case .meeting: return .orange
             case .decision: return .purple
             case .observation: return .green
@@ -97,7 +97,7 @@ struct SearchResultCard: View {
     
     private var title: String {
         switch item {
-            case .compliance(let item): return item.title
+            case .task(let item): return item.title
             case .meeting(let meeting): return meeting.title
             case .decision(let decision): return decision.title
             case .observation(let obs): return obs.teacherName
@@ -106,7 +106,7 @@ struct SearchResultCard: View {
     
     private var subtitle: String {
         switch item {
-            case .compliance(let item): return item.category?.title ?? "No Category"
+            case .task(let item): return item.detail ?? "No details"
             case .meeting(let meeting): return meeting.type.rawValue
             case .decision(let decision): return decision.detail ?? "No details"
             case .observation(let obs): return obs.subject
@@ -119,7 +119,7 @@ struct SearchResultCard: View {
         
         let targetDate: Date
         switch item {
-            case .compliance(let item): targetDate = item.dueDate
+            case .task(let item): targetDate = item.dueDate
             case .meeting(let meeting): targetDate = meeting.date
             case .decision(let decision): targetDate = decision.dateMade
             case .observation(let obs): targetDate = obs.date
@@ -130,7 +130,7 @@ struct SearchResultCard: View {
     
     private var badge: String? {
         switch item {
-            case .compliance(let item):
+            case .task(let item):
                 return item.isOverdue ? "Overdue" : nil
             case .meeting(let meeting):
                 return meeting.status.rawValue
@@ -144,7 +144,7 @@ struct SearchResultCard: View {
     
     private var badgeColor: Color {
         switch item {
-            case .compliance(let item):
+            case .task(let item):
                 return item.isOverdue ? .red : .green
             case .meeting:
                 return .blue
@@ -164,8 +164,8 @@ struct SearchResultCard: View {
     @ViewBuilder
     private var destinationView: some View {
         switch item {
-            case .compliance(let item):
-                ComplianceDetailView(item: item)
+            case .task(let item):
+                ComplianceDetailView(task: item)
             case .meeting(let meeting):
                MeetingDetailView(meeting: meeting)
             case .decision(let decision):
@@ -178,5 +178,5 @@ struct SearchResultCard: View {
 }
 
 #Preview {
-    SearchResultCard(item: .compliance(ComplianceItem(title: "Test Rule", category: ComplianceCategory(), dueDate: Date())))
+    SearchResultCard(item: .task(ProjectTask(title: "Test Rule", dueDate: Date())))
 }

@@ -22,7 +22,7 @@ struct SearchView: View {
     
     @Namespace private var animation
     
-    @Query private var items: [ComplianceItem]
+    @Query private var items: [ProjectTask]
     @Query private var meetings: [Meeting]
     @Query private var decisions: [Decision]
     @Query private var observations: [ClassroomWalkthrough]
@@ -74,9 +74,9 @@ struct SearchView: View {
                         ) {
                             ForEach(results.items) { item in
                                 Button {
-                                    navigation.navigate(to: .compliance(item))
+                                    navigation.navigate(to: .task(item))
                                 } label: {
-                                    SearchResultCard(item: .compliance(item))
+                                    SearchResultCard(item: .task(item))
                                         .transition(.asymmetric(
                                             insertion: .push(from: .trailing),
                                             removal: .push(from: .leading)
@@ -228,8 +228,7 @@ struct SearchView: View {
         
         let filteredItems = items.filter { item in
             item.title.localizedCaseInsensitiveContains(query) ||
-            (item.detail ?? "").localizedCaseInsensitiveContains(query) ||
-            (item.category?.title ?? "").localizedCaseInsensitiveContains(query)
+            (item.detail ?? "").localizedCaseInsensitiveContains(query)
         }
         
         let filteredMeetings = meetings.filter { meeting in
@@ -249,7 +248,7 @@ struct SearchView: View {
         }
         
         return SearchResults(
-            items: selectedCategory == .all || selectedCategory == .compliance ? filteredItems : [],
+            items: selectedCategory == .all || selectedCategory == .task ? filteredItems : [],
             meetings: selectedCategory == .all || selectedCategory == .meetings ? filteredMeetings : [],
             decisions: selectedCategory == .all || selectedCategory == .decisions ? filteredDecisions : [],
             observations: selectedCategory == .all || selectedCategory == .observations ? filteredObservations : []

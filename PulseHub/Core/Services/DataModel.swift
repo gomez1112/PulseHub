@@ -95,8 +95,7 @@ final class DataModel {
     
     //MARK: Compliance
     var overdueItemsCount = 0
-    var selectedCategory: ComplianceCategory?
-    var isShowingStats = true
+    var isShowingStats = false
     var isCreatingNewCategory = false
     var newCategoryName = ""
     var searchText = ""

@@ -13,29 +13,24 @@ struct ComplianceDetailView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     
-    @Bindable var item: ComplianceItem
+    @Bindable var task: ProjectTask
  
     @State private var showDeleteAlert = false
+    @State private var newTaskTitle = ""
+    @FocusState private var isTaskFieldFocused: Bool
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                // Header
                 headerSection
-                
-                // Status Section
                 statusSection
-                
-                // Details Section
-                if let detail = item.detail {
+                subtasksSection
+                if let detail = task.detail, !detail.isEmpty {
                     detailSection(detail: detail)
                 }
                 
-                // Notes Section
-                notesSection
-                
                 // Related Meeting
-                if let meeting = item.meeting {
+                if let meeting = task.meeting {
                     relatedMeetingSection(meeting: meeting)
                 }
                 
@@ -45,14 +40,26 @@ struct ComplianceDetailView: View {
             .padding()
         }
         .background(Color.chipBackground)
-        .navigationTitle("Compliance Item")
+        .navigationTitle(task.taskType == .compliance ? "Compliance Item" : "Task Details")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Edit") {
+                    
+                }
+            }
+            ToolbarItem(placement: .destructiveAction) {
+                Button("Delete", role: .destructive) {
+                    showDeleteAlert = true
+                }
+            }
+        }
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .alert("Delete Item", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
-                context.delete(item)
+                context.delete(task)
                 dismiss()
             }
         } message: {
@@ -64,30 +71,27 @@ struct ComplianceDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(item.category?.title ?? "No Category")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                     
-                    Text(item.title)
+                    Text(task.title)
                         .font(.largeTitle.bold())
                         .foregroundStyle(.primary)
                 }
                 
                 Spacer()
                 
-                Image(systemName: item.priority.icon)
+                Image(systemName: task.priority.icon)
                     .font(.title2.weight(.medium))
-                    .foregroundStyle(item.priority.color)
+                    .foregroundStyle(task.priority.color)
                     .padding()
                     .background {
                         Circle()
-                            .fill(item.priority.color.opacity(0.15))
+                            .fill(task.priority.color.opacity(0.15))
                     }
             }
             
             HStack(spacing: 16) {
                 Label {
-                    Text(item.createdDate.formatted(date: .abbreviated, time: .omitted))
+                    Text(task.createdDate.formatted(date: .abbreviated, time: .omitted))
                 } icon: {
                     Image(systemName: "calendar.badge.plus")
                         .foregroundStyle(.secondary)
@@ -95,13 +99,13 @@ struct ComplianceDetailView: View {
                 .font(.caption)
                 
                 Label {
-                    Text(LocalizedStringResource(stringLiteral: item.dueText))
-                        .foregroundStyle(item.isOverdue ? .red : .primary)
+                    Text(LocalizedStringResource(stringLiteral: task.dueText))
+                        .foregroundStyle(task.isOverdue ? .red : .primary)
                 } icon: {
                     Image(systemName: "calendar.badge.exclamationmark")
-                        .foregroundStyle(item.isOverdue ? .red : .secondary)
+                        .foregroundStyle(task.isOverdue ? .red : .secondary)
                 }
-                .font(.caption.weight(item.isOverdue ? .semibold : .regular))
+                .font(.caption.weight(task.isOverdue ? .semibold : .regular))
             }
         }
         .padding()
@@ -118,27 +122,67 @@ struct ComplianceDetailView: View {
                 .font(.headline)
             
             HStack {
-                StatusPicker(selection: $item.status)
+                StatusPicker(selection: $task.status)
                 
                 Spacer()
-                
-                Toggle(isOn: $item.isResolved) {
-                    Label("Resolved", systemImage: item.isResolved ? "checkmark.circle.fill" : "circle")
-                        .font(.callout.weight(.medium))
-                }
-                .toggleStyle(.button)
-                .buttonStyle(.bordered)
-                .tint(item.isResolved ? .green : .gray)
             }
         }
         .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.cardBackground)
-                .shadow(color: .black.opacity(0.05), radius: 10)
-        }
+        .cardStyle()
     }
-    
+    private var subtasksSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Checklist (\(task.remainingTaskCount) remaining)", systemImage: "checklist")
+                .font(.headline)
+            
+            if let subtasks = task.subtasks, !subtasks.isEmpty {
+                ForEach(subtasks) { subtask in
+                    HStack(spacing: 12) {
+                        Button {
+                            withAnimation {
+                                if subtask.status == .completed {
+                                    subtask.status = .pending
+                                } else {
+                                    subtask.status = .completed
+                                }
+                                updateParentStatus()
+                            }
+                        } label: {
+                            Image(systemName: subtask.isCompleted ? "checkmark.circle.fill" : "circle")
+                                .font(.title3)
+                                .foregroundStyle(subtask.isCompleted ? .green : .secondary)
+                        }
+                        .buttonStyle(.plain)
+                        
+                        TextField("Subtask Title", text: Binding(get: { subtask.title }, set: { subtask.title = $0 }))
+                            .strikethrough(subtask.isCompleted, color: .primary)
+                            .foregroundStyle(subtask.isCompleted ? .secondary : .primary)
+                        
+                        Spacer()
+                    }
+                    .swipeActions {
+                        Button(role: .destructive) { deleteSubtask(subtask) } label: { Label("Delete", systemImage: "trash") }
+                    }
+                    Divider()
+                }
+            }
+            
+            HStack {
+                TextField("Add new sub-task...", text: $newTaskTitle)
+                    .textFieldStyle(.plain)
+                    .focused($isTaskFieldFocused)
+                    .onSubmit(addNewSubtask)
+                Button(action: addNewSubtask) {
+                    Image(systemName: "plus.circle.fill").font(.title2)
+                }
+                .disabled(newTaskTitle.isEmpty)
+                .buttonStyle(.plain)
+            }
+            .padding(.top, 4)
+        }
+        .padding()
+        .cardStyle()
+    }
     private func detailSection(detail: String) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Label("Details", systemImage: "doc.text")
@@ -148,29 +192,6 @@ struct ComplianceDetailView: View {
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.cardBackground)
-                .shadow(color: .black.opacity(0.05), radius: 10)
-        }
-    }
-    
-    private var notesSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Label("Notes", systemImage: "note.text")
-                .font(.headline)
-            
-            TextEditor(text: $item.notes)
-                .font(.callout)
-                .foregroundStyle(.primary)
-                .frame(minHeight: 100)
-                .padding(8)
-                .background {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(.quaternary)
-                }
         }
         .padding()
         .background {
@@ -224,15 +245,14 @@ struct ComplianceDetailView: View {
     private var actionButtons: some View {
         HStack(spacing: 12) {
             Button {
-                item.status = .completed
-                item.isResolved = true
-                item.completedDate = Date()
+                task.status = .completed
+                task.completedDate = Date()
             } label: {
                 Label("Mark Complete", systemImage: "checkmark.circle.fill")
                     //.frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(item.isResolved)
+            .disabled(task.isCompleted)
             Spacer()
             Button {
             } label: {
@@ -242,10 +262,45 @@ struct ComplianceDetailView: View {
         }
         .padding()
     }
+    // MARK: - Helper Functions
+    private func addNewSubtask() {
+        guard !newTaskTitle.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        
+        let subtask = ProjectTask(title: newTaskTitle.trimmingCharacters(in: .whitespaces))
+        subtask.parentTask = task
+        
+        if task.subtasks == nil {
+            task.subtasks = []
+        }
+        task.subtasks?.append(subtask)
+        
+        newTaskTitle = ""
+        isTaskFieldFocused = false
+        updateParentStatus()
+    }
+    private func deleteSubtask(_ subtask: ProjectTask) {
+        if let index = task.subtasks?.firstIndex(where: { $0.id == subtask.id }) {
+            task.subtasks?.remove(at: index)
+            // The subtask is deleted from the context because of the .cascade delete rule
+            updateParentStatus()
+        }
+    }
+    private func updateParentStatus() {
+        if task.isCompleted {
+            task.status = .completed
+            if task.completedDate == nil {
+                task.completedDate = Date()
+            }
+        } else {
+            let hasCompletedSubtasks = task.subtasks?.contains { $0.isCompleted } ?? false
+            task.status = hasCompletedSubtasks ? .inProgress : .pending
+            task.completedDate = nil
+        }
+    }
 }
 
 #Preview(traits: .previewData) {
     NavigationStack {
-        ComplianceDetailView(item: ComplianceItem.samples[0])
+        ComplianceDetailView(task: ProjectTask(title: "New Task"))
     }
 }

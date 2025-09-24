@@ -39,16 +39,12 @@ struct ToolbarChooser: ToolbarContent {
     var body: some ToolbarContent {
         @Bindable var model = model
         switch tab {
-            case .dashboard:
-                dashboardToolbar
-            case .compliance:
-                complianceToolbar
-            case .meetings:
-                meetingsToolbar
-            case .decision:
-                decisionToolbar
-            case .search:
-                searchToolbar
+            case .dashboard: dashboardToolbar
+            case .compliance: complianceToolbar
+            case .meetings: meetingsToolbar
+            case .decision: decisionToolbar
+            case .observations: observationsToolbar
+            case .search: searchToolbar
         }
     }
     
@@ -81,7 +77,7 @@ struct ToolbarChooser: ToolbarContent {
         ToolbarSpacer(.fixed)
         ToolbarItem(placement: .confirmationAction) {
             Button {
-                navigation.presentSheet(.addCompliance)
+                navigation.presentSheet(.addTask)
             } label: {
                 Image(systemName: "plus")
             }
@@ -154,7 +150,16 @@ struct ToolbarChooser: ToolbarContent {
             }
         }
     }
-    
+    @ToolbarContentBuilder
+    private var observationsToolbar: some ToolbarContent {
+        ToolbarItem(placement: .confirmationAction) {
+            Button {
+                navigation.presentSheet(.addObservation)
+            } label: {
+                Image(systemName: "plus")
+            }
+        }
+    }
     @ToolbarContentBuilder
     private var searchToolbar: some ToolbarContent {
         ToolbarItem(placement: .confirmationAction) {
@@ -190,7 +195,7 @@ enum DashboardAction: String, CaseIterable {
     var action: SheetDestination {
         switch self {
             case .meeting: .addMeeting
-            case .compliance: .addCompliance
+            case .compliance: .addTask
             case .observation: .addObservation
             case .decision: .addDecision
         }

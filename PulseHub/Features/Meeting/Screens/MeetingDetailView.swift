@@ -59,11 +59,6 @@ struct MeetingDetailView: View {
                     decisionsSection(decisions)
                 }
                 
-                // Related Compliance Items
-                if let items = meeting.complianceItems, !items.isEmpty {
-                    complianceSection(items)
-                }
-                
                 // Related Observations
                 if let observations = meeting.observations, !observations.isEmpty {
                     observationsSection(observations)
@@ -79,8 +74,8 @@ struct MeetingDetailView: View {
         .navigationDestination(for: Decision.self) { decision in
             DecisionDetailView(decision: decision)
         }
-        .navigationDestination(for: ComplianceItem.self) { item in
-            ComplianceDetailView(item: item)
+        .navigationDestination(for: ProjectTask.self) { item in
+            ComplianceDetailView(task: item)
         }
         .navigationDestination(for: ClassroomWalkthrough.self) { observation in
             ObservationDetailView(observation: observation)
@@ -137,8 +132,6 @@ struct MeetingDetailView: View {
                                 Capsule()
                                     .fill(.orange.opacity(0.15))
                             }
-                        
-                        StatusBadge(status: meeting.status.statusToComplianceStatus)
                     }
                     
                     Text(meeting.title)
@@ -237,13 +230,6 @@ struct MeetingDetailView: View {
                 )
             }
             
-            if let items = meeting.complianceItems {
-                QuickStat(
-                    icon: "checkmark.shield", value: "\(items.count)",
-                    label: "Items",
-                    color: .green
-                )
-            }
             
             QuickStat(
                 icon: "clock", value: meeting.startTime.formatted(.dateTime.hour().minute()),
@@ -369,7 +355,7 @@ struct MeetingDetailView: View {
         .cardStyle()
     }
     
-    private func complianceSection(_ items: [ComplianceItem]) -> some View {
+    private func complianceSection(_ items: [ProjectTask]) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Label("Related Compliance Items", systemImage: "checkmark.shield")

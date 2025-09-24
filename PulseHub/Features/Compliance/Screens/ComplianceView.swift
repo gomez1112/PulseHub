@@ -12,7 +12,15 @@ struct ComplianceView: View {
     @Environment(NavigationContext.self) private var navigation
     @Environment(DataModel.self) private var model
     
-    @Query(sort: \ComplianceItem.dueDate, order: .forward) private var items: [ComplianceItem]
+    private static let complianceRawValue = TaskType.compliance.rawValue
+    
+    @Query(
+        filter: #Predicate<ProjectTask> { task in
+            task.taskType.rawValue == complianceRawValue
+        },
+        sort: \.dueDate,
+        order: .forward
+    ) private var items: [ProjectTask]
     
     @Namespace private var animation
     
@@ -28,7 +36,7 @@ struct ComplianceView: View {
                 filterSection
                 ForEach(model.groupedItems(items: items), id: \.0) { section, sectionItems in
                     ComplianceSection(title: section, items: sectionItems, animation: animation) { item in
-                        navigation.navigate(to: .compliance(item))
+                        navigation.navigate(to: .task(item))
                     }
                 }
                 if model.filtered(items: items).isEmpty {
@@ -53,22 +61,6 @@ struct ComplianceView: View {
                     count: items.count
                 ) {
                     withAnimation { model.filterStatus = nil }
-                }
-                
-                ForEach(ComplianceStatus.allCases, id: \.self) { status in
-                    let count = items.filter { $0.status == status }.count
-                    FilterChip(
-                        title: status.rawValue,
-                        isSelected: model.filterStatus == status,
-                        count: count
-                    ) {
-                        withAnimation {
-                            model.filterStatus = status
-#if !os(macOS)
-                            AppTheme.selection()
-                            #endif
-                        }
-                    }
                 }
                 
                 Divider()

@@ -13,7 +13,7 @@ struct TodayView: View {
     @Environment(NavigationContext.self) private var navigation
     @Environment(DataModel.self) private var model
     
-    @Query(sort: \ComplianceItem.dueDate, order: .forward) private var items: [ComplianceItem]
+    @Query(sort: \ProjectTask.dueDate, order: .forward) private var items: [ProjectTask]
     @Query private var decisions: [Decision]
     @Query private var meetings: [Meeting]
     @Query private var observations: [ClassroomWalkthrough]
@@ -35,12 +35,12 @@ struct TodayView: View {
             .sorted { $0.date < $1.date }
     }
     
-    private var todaysOverdueItems: [ComplianceItem] {
+    private var todaysOverdueItems: [ProjectTask] {
         items.filter { $0.isOverdue }
             .sorted { $0.dueDate < $1.dueDate }
     }
     
-    private var todaysDueItems: [ComplianceItem] {
+    private var todaysDueItems: [ProjectTask] {
         items.filter { Calendar.current.isDateInToday($0.dueDate) && !$0.isOverdue }
             .sorted { $0.priority.rawValue > $1.priority.rawValue }
     }
@@ -55,8 +55,8 @@ struct TodayView: View {
     private var todaysObservations: [ClassroomWalkthrough] {
         observations.filter {
             Calendar.current.isDateInToday($0.date) ||
-            ($0.followUpRequired && $0.followUpDate != nil &&
-             Calendar.current.isDateInToday($0.followUpDate!))
+            // MODIFIED: Safely unwrap the followUpDate.
+            ($0.followUpRequired && $0.followUpDate.map(Calendar.current.isDateInToday) == true)
         }
     }
     
@@ -339,7 +339,7 @@ struct TodayView: View {
                             item: item,
                             style: .critical
                         ) {
-                            navigation.navigate(to: .compliance(item))
+                            navigation.navigate(to: .task(item))
                         }
                         .transition(.asymmetric(
                             insertion: .push(from: .trailing).combined(with: .opacity),
@@ -363,7 +363,7 @@ struct TodayView: View {
                             item: item,
                             style: .normal
                         ) {
-                            navigation.navigate(to: .compliance(item))
+                            navigation.navigate(to: .task(item))
                         }
                         .transition(.asymmetric(
                             insertion: .push(from: .trailing).combined(with: .opacity),
@@ -578,7 +578,7 @@ struct TodayView: View {
             case "Meeting":
                 navigation.presentSheet(.addMeeting)
             case "Compliance":
-                navigation.presentSheet(.addCompliance)
+                navigation.presentSheet(.addTask)
             case "Decision":
                 navigation.presentSheet(.addDecision)
             case "Observation":
@@ -649,7 +649,7 @@ struct SectionHeader: View {
 }
 
 struct EnhancedTaskCard: View {
-    let item: ComplianceItem
+    let item: ProjectTask
     let style: CardStyle
     let action: () -> Void
     
@@ -697,10 +697,6 @@ struct EnhancedTaskCard: View {
                                 .font(.body.weight(.semibold))
                                 .foregroundStyle(.primary)
                                 .lineLimit(1)
-                            
-                            Text(item.category?.title ?? "Compliance")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
                         }
                         
                         Spacer()

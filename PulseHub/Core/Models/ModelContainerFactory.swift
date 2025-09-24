@@ -28,7 +28,7 @@ import SwiftData
 /// throughout the app, ensuring data layer setup is centralized and easy to maintain.
 @MainActor
 struct ModelContainerFactory {
-    static let models: [any PersistentModel.Type] = [ Meeting.self, ComplianceItem.self, ComplianceCategory.self, Decision.self, Meeting.self, ClassroomWalkthrough.self, RubricComponent.self]
+    static let models: [any PersistentModel.Type] = [ Meeting.self, Decision.self, Meeting.self, ClassroomWalkthrough.self, RubricComponent.self, ProjectTask.self]
     static let schema = Schema(models)
     static func configuration(isStoredInMemoryOnly: Bool) -> ModelConfiguration {
         ModelConfiguration(schema: schema, isStoredInMemoryOnly: isStoredInMemoryOnly)
@@ -80,7 +80,6 @@ struct ModelContainerFactory {
         let context = container.mainContext
 
         // Insert sample data for all models
-        ComplianceCategory.samples.forEach { context.insert($0) }
         //ComplianceItem.samples.forEach { context.insert($0) }
         Decision.samples.forEach { context.insert($0) }
         Meeting.samples.forEach { context.insert($0) }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ComplianceRow: View {
-    let item: ComplianceItem
+    let item: ProjectTask
     
     var body: some View {
         HStack {
@@ -60,5 +60,5 @@ struct ComplianceRow: View {
 }
 
 #Preview {
-    ComplianceRow(item: ComplianceItem(title: "Submit Safety Report", category: ComplianceCategory(), detail: "Monthly safety report for the science lab", dueDate: Date().addingTimeInterval(86400)))
+    ComplianceRow(item: ProjectTask(title: "Submit Safety Report"))
 }
